@@ -33,13 +33,13 @@ export default function Show({ servidor }: ShowProps) {
                         <h1 className="text-2xl font-semibold">Detalhes do Servidor Efetivo</h1>
                         <div className="flex space-x-4">
                             <Link
-                                href={route('servidores.efetivos.edit', servidor.pes_id)}
+                                href={route('servidores.efetivo.edit', servidor.pes_id)}
                                 className="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded"
                             >
                                 Editar
                             </Link>
                             <Link
-                                href={route('servidores.efetivos.index')}
+                                href={route('servidores.efetivo.index')}
                                 className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded"
                             >
                                 Voltar

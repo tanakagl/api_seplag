@@ -24,12 +24,15 @@ interface ServidorEfetivoIndexProps extends PageProps {
         current_page: number;
         last_page: number;
     };
+    flash?: {
+        success?: string;
+    };
 }
 
-export default function Index({ servidores, flash }: ServidorEfetivoIndexProps & { flash: { success?: string } }) {
+export default function Index({ servidores, flash }: ServidorEfetivoIndexProps) {
     const handleDelete = (pesId: number) => {
         if (confirm('Tem certeza que deseja excluir este servidor?')) {
-            router.delete(route('servidores.efetivos.destroy', pesId));
+            router.delete(route('servidores.efetivo.destroy', pesId));
         }
     };
 
@@ -41,14 +44,14 @@ export default function Index({ servidores, flash }: ServidorEfetivoIndexProps &
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-2xl font-semibold">Servidores Efetivos</h1>
                     <Link
-                        href={route('servidores.efetivos.create')}
+                        href={route('servidores.efetivo.create')}
                         className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
                     >
                         Adicionar Servidor
                     </Link>
                 </div>
 
-                {flash.success && (
+                {flash?.success && (
                     <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4">
                         {flash.success}
                     </div>
@@ -71,20 +74,20 @@ export default function Index({ servidores, flash }: ServidorEfetivoIndexProps &
                                     <td className="px-6 py-4 whitespace-nowrap">{servidor.pessoa.pes_nome}</td>
                                     <td className="px-6 py-4 whitespace-nowrap">{servidor.se_matricula}</td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        {new Date(servidor.pessoa.pes_data_nascimento).toLocaleDateString()}
+                                        {new Date(servidor.pessoa.pes_data_nascimento).toLocaleDateString('pt-BR')}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         {servidor.pessoa.pes_sexo === 'M' ? 'Masculino' : 'Feminino'}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <Link
-                                            href={route('servidores.efetivos.show', servidor.pes_id)}
+                                            href={route('servidores.efetivo.show', servidor.pes_id)}
                                             className="text-blue-500 hover:text-blue-700 mr-4"
                                         >
                                             Ver
                                         </Link>
                                         <Link
-                                            href={route('servidores.efetivos.edit', servidor.pes_id)}
+                                            href={route('servidores.efetivo.edit', servidor.pes_id)}
                                             className="text-yellow-500 hover:text-yellow-700 mr-4"
                                         >
                                             Editar
@@ -107,7 +110,7 @@ export default function Index({ servidores, flash }: ServidorEfetivoIndexProps &
                             <div className="flex justify-between">
                                 {servidores.current_page > 1 && (
                                     <Link
-                                        href={route('servidores.efetivos.index', { page: servidores.current_page - 1 })}
+                                        href={route('servidores.efetivo.index', { page: servidores.current_page - 1 })}
                                         className="text-blue-500"
                                     >
                                         Anterior
@@ -120,7 +123,7 @@ export default function Index({ servidores, flash }: ServidorEfetivoIndexProps &
 
                                 {servidores.current_page < servidores.last_page && (
                                     <Link
-                                        href={route('servidores.efetivos.index', { page: servidores.current_page + 1 })}
+                                        href={route('servidores.efetivo.index', { page: servidores.current_page + 1 })}
                                         className="text-blue-500"
                                     >
                                         Próxima

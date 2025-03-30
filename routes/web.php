@@ -17,8 +17,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 });
 
-Route::resource('servidores/efetivo', ServidorEfetivoController::class);
-Route::resource('servidores/temporario', ServidorTemporarioController::class);
+Route::resource('servidores/efetivo', ServidorEfetivoController::class, [
+    'names' => 'servidores.efetivo'
+]);
+Route::resource('servidores/temporario', ServidorTemporarioController::class, [
+    'names' => 'servidores.temporario'
+]);
 Route::resource('unidades', UnidadeController::class);
 Route::resource('lotacao', LotacaoController::class);
 

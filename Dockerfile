@@ -21,6 +21,14 @@ RUN apt-get update && apt-get install -y \
     libxpm-dev \
     libzip-dev
 
+# Configurar locales para português do Brasil
+RUN apt-get update && apt-get install -y locales \
+&& sed -i -e 's/# pt_BR.UTF-8 UTF-8/pt_BR.UTF-8 UTF-8/' /etc/locale.gen \
+&& locale-gen
+ENV LANG pt_BR.UTF-8
+ENV LANGUAGE pt_BR:pt
+ENV LC_ALL pt_BR.UTF-8
+
 # Instalar Node.js e npm
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs
@@ -55,10 +63,6 @@ RUN npm run build
 
 # Expor porta 9000
 EXPOSE 9000
-
-# Comando padrão para iniciar o servidor de desenvolvimento do Laravel
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
-
 
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh

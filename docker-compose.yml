@@ -9,6 +9,13 @@ services:
     container_name: api_seplag_app
     restart: unless-stopped
     working_dir: /var/www/html
+    environment:
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
     volumes:
       - ./:/var/www/html
     ports:

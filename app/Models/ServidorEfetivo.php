@@ -12,7 +12,7 @@ class ServidorEfetivo extends Model
 
     protected $fillable = [
         'pes_id',
-        'se_matrise_matricula',        
+        'se_matricula',        
     ];
 
     public function pessoa()

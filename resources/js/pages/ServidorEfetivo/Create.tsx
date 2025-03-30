@@ -1,8 +1,14 @@
-import React, { FormEvent } from 'react'
+import { FormEvent } from 'react'
 import { Head, useForm } from '@inertiajs/react'
 import { PageProps } from '@inertiajs/core'
+import DatePicker, { registerLocale } from 'react-datepicker'
+import { ptBR } from 'date-fns/locale'
+import "react-datepicker/dist/react-datepicker.css"
 
 export default function Create({ errors }: PageProps & { errors: Record<string, string> }) {
+
+  registerLocale('pt-BR', ptBR)
+
   const { data, setData, post, processing } = useForm({
     pes_nome: '',
     pes_data_nascimento: '',
@@ -14,7 +20,22 @@ export default function Create({ errors }: PageProps & { errors: Record<string, 
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    post(route('servidores.efetivos.store'));
+    post(route('servidores.efetivo.store'));
+  };
+
+  const handleDateChange = (date: Date | null) => {
+    if (date) {
+      const formattedDate = date.toISOString().split('T')[0];
+      setData('pes_data_nascimento', formattedDate);
+    } else {
+      setData('pes_data_nascimento', '');
+    }
+  };
+
+  const getDateValue = () => {
+    if (!data.pes_data_nascimento) return null;
+    const date = new Date(data.pes_data_nascimento);
+    return isNaN(date.getTime()) ? null : date;
   };
 
   return (
@@ -46,12 +67,14 @@ export default function Create({ errors }: PageProps & { errors: Record<string, 
                 <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" htmlFor="pes_data_nascimento">
                   Data de Nascimento
                 </label>
-                <input
-                  type="date"
+                <DatePicker
                   id="pes_data_nascimento"
-                  value={data.pes_data_nascimento}
-                  onChange={e => setData('pes_data_nascimento', e.target.value)}
+                  selected={getDateValue()}
+                  onChange={handleDateChange}
+                  dateFormat="dd/MM/yyyy"
+                  locale="pt-BR"
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholderText="DD/MM/AAAA"
                   required
                 />
                 {errors.pes_data_nascimento && <p className="text-red-500 text-xs mt-1">{errors.pes_data_nascimento}</p>}

@@ -28,7 +28,7 @@ class ServidorEfetivoController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'pes_id' => 'required|string|max:255',
+            'pes_nome' => 'required|string|max:255',
             'pes_data_nascimento' => 'required|date',
             'pes_sexo' => 'required|string|max:1',
             'pes_mae' => 'required|string|max:255',
@@ -96,7 +96,7 @@ class ServidorEfetivoController extends Controller
             ]);
         });
         
-        return redirect()->route('servidores..index')
+        return redirect()->route('servidores.efetivo.index')
                          ->with('success', 'Servidor efetivo atualizado com sucesso.');
     }
 

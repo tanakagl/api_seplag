@@ -33,7 +33,7 @@ export default function Edit({ servidor, errors }: EditProps & { errors: Record<
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        put(route('servidores.efetivos.update', servidor.pes_id));
+        put(route('servidores.efetivo.update', servidor.pes_id));
     };
 
     return (
