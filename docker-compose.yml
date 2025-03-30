@@ -12,6 +12,7 @@ services:
     volumes:
       - ./:/var/www/html
     ports:
+      - "5173:5173"
       - "8000:8000"
     depends_on:
       - postgres
@@ -19,8 +20,7 @@ services:
       - minio
     networks:
       - api_seplag_network
-    command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
-
+      
   # Servidor de banco de dados PostgreSQL
   postgres:
     image: postgres:latest

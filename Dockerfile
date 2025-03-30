@@ -15,6 +15,11 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libpq-dev \
     postgresql-client \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libwebp-dev \
+    libxpm-dev \
+    libzip-dev
 
 # Instalar Node.js e npm
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
