@@ -11,15 +11,16 @@ interface Pessoa {
     pes_pai: string;
 }
 
-interface ServidorEfetivo {
+interface ServidorTemporario {
     pes_id: number;
-    se_matricula: string;
+    st_data_admissao: string;
+    st_data_demissao: string | null;
     pessoa: Pessoa;
 }
 
-interface ServidorEfetivoIndexProps extends PageProps {
+interface ServidorTemporarioIndexProps extends PageProps {
     servidores: {
-        data: ServidorEfetivo[];
+        data: ServidorTemporario[];
         links: any;
         current_page: number;
         last_page: number;
@@ -29,10 +30,10 @@ interface ServidorEfetivoIndexProps extends PageProps {
     };
 }
 
-export default function Index({ servidores, flash }: ServidorEfetivoIndexProps) {
+export default function Index({ servidores, flash }: ServidorTemporarioIndexProps) {
     const handleDelete = (pesId: number) => {
-        if (confirm('Tem certeza que deseja excluir este servidor efetivo?')) {
-            router.delete(route('servidores.efetivo.destroy', pesId), {
+        if (confirm('Tem certeza que deseja excluir este servidor temporário?')) {
+            router.delete(route('servidores.temporario.destroy', pesId), {
                 onSuccess: () => {
                     console.log('Servidor excluído com sucesso');
                 },
@@ -45,13 +46,13 @@ export default function Index({ servidores, flash }: ServidorEfetivoIndexProps) 
 
     return (
         <>
-            <Head title="Servidores Efetivos" />
+            <Head title="Servidores Temporários" />
 
             <div className="container mx-auto py-8">
                 <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-2xl font-semibold">Servidores Efetivos</h1>
+                    <h1 className="text-2xl font-semibold">Servidores Temporários</h1>
                     <Link
-                        href={route('servidores.efetivo.create')}
+                        href={route('servidores.temporario.create')}
                         className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
                     >
                         Adicionar Servidor
@@ -69,8 +70,8 @@ export default function Index({ servidores, flash }: ServidorEfetivoIndexProps) 
                         <thead className="bg-gray-50 dark:bg-gray-700">
                             <tr>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Nome</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Matrícula</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Data Nascimento</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Data Admissão</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Data Demissão</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Sexo</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Ações</th>
                             </tr>
@@ -79,28 +80,32 @@ export default function Index({ servidores, flash }: ServidorEfetivoIndexProps) 
                             {servidores.data.map((servidor) => (
                                 <tr key={servidor.pes_id}>
                                     <td className="px-6 py-4 whitespace-nowrap">{servidor.pessoa.pes_nome}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap">{servidor.se_matricula}</td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        {new Date(servidor.pessoa.pes_data_nascimento).toLocaleDateString('pt-BR')}
+                                        {new Date(servidor.st_data_admissao).toLocaleDateString('pt-BR')}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        {servidor.st_data_demissao 
+                                            ? new Date(servidor.st_data_demissao).toLocaleDateString('pt-BR') 
+                                            : '-'}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         {servidor.pessoa.pes_sexo === 'M' ? 'Masculino' : 'Feminino'}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <Link
-                                            href={route('servidores.efetivo.show', servidor.pessoa.pes_id)}
+                                            href={route('servidores.temporario.show', servidor.pes_id)}
                                             className="text-blue-500 hover:text-blue-700 mr-4"
                                         >
                                             Ver
                                         </Link>
                                         <Link
-                                            href={route('servidores.efetivo.edit', servidor.pessoa.pes_id)}
+                                            href={route('servidores.temporario.edit', servidor.pes_id)}
                                             className="text-yellow-500 hover:text-yellow-700 mr-4"
                                         >
                                             Editar
                                         </Link>
                                         <button
-                                            onClick={() => handleDelete(servidor.pessoa.pes_id)}
+                                            onClick={() => handleDelete(servidor.pes_id)}
                                             className="text-red-500 hover:text-red-700"
                                         >
                                             Excluir
@@ -116,7 +121,7 @@ export default function Index({ servidores, flash }: ServidorEfetivoIndexProps) 
                             <div className="flex justify-between">
                                 {servidores.current_page > 1 && (
                                     <Link
-                                        href={route('servidores.efetivo.index', { page: servidores.current_page - 1 })}
+                                        href={route('servidores.temporario.index', { page: servidores.current_page - 1 })}
                                         className="text-blue-500"
                                     >
                                         Anterior
@@ -129,7 +134,7 @@ export default function Index({ servidores, flash }: ServidorEfetivoIndexProps) 
 
                                 {servidores.current_page < servidores.last_page && (
                                     <Link
-                                        href={route('servidores.efetivo.index', { page: servidores.current_page + 1 })}
+                                        href={route('servidores.temporario.index', { page: servidores.current_page + 1 })}
                                         className="text-blue-500"
                                     >
                                         Próxima

@@ -105,6 +105,7 @@ class AuthApiController extends Controller
     {
         $createdAt = $token->created_at;
         $expirationTime = $createdAt->addMinutes(5);
+        \Log::info('Token expira em: ' . $expirationTime->toDateTimeString());
         return $expirationTime->toDateTimeString();
     }
 }

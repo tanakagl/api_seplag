@@ -113,31 +113,16 @@ class ServidorEfetivoController extends Controller
     public function destroy(ServidorEfetivo $servidorEfetivo)
     {
         try {
+            \Log::info('Tentando excluir servidor efetivo com ID: ' . $servidorEfetivo->pes_id);
+
             DB::transaction(function () use ($servidorEfetivo) {
                 $pessoa = $servidorEfetivo->pessoa;
-                
                 $servidorEfetivo->delete();
-                
-                if ($pessoa) {
-                    $temOutrosVinculos = (
-                        \App\Models\ServidorTemporario::where('pes_id', $pessoa->pes_id)->exists() ||
-                        \App\Models\Lotacao::where('pes_id', $pessoa->pes_id)->exists()
-                    );
-                    
-                    if (!$temOutrosVinculos) {
-                        if (method_exists($pessoa, 'enderecos') && $pessoa->enderecos()->count() > 0) {
-                            $pessoa->enderecos()->delete();
-                        }
-                        
-                        if (method_exists($pessoa, 'fotos') && $pessoa->fotos()->count() > 0) {
-                            $pessoa->fotos()->delete();
-                        }
-                        
-                        $pessoa->delete();
-                    }
-                }
+                $pessoa->delete();
+
             });
-            
+            \Log::info('Servidor efetivo excluído com sucesso');
+
             return redirect()->route('servidores.efetivo.index')
                             ->with('success', 'Servidor efetivo excluído com sucesso.');
         } catch (\Exception $e) {
