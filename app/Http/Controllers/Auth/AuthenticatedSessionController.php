@@ -30,22 +30,57 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
         $request->session()->regenerate();
-
-        return redirect()->intended(route('dashboard', absolute: false));
+        
+        try {
+            // Gerar token API para o usuário logado
+            $user = Auth::user();
+            $abilities = $this->getAbilitiesForRole($user->role);
+            $token = $user->createToken('api-token', $abilities)->plainTextToken;
+            
+            // Armazenar o token e sua expiração na sessão
+            session(['api_token' => $token]);
+            session(['token_expires_at' => now()->addMinutes(5)->toDateTimeString()]);
+            session(['token_abilities' => $abilities]);
+            
+            \Log::info('Login bem-sucedido, redirecionando para welcome');
+            
+            // Use redirecionamento direto em vez de intended
+            return redirect('/welcome');
+        } catch (\Exception $e) {
+            \Log::error('Erro ao gerar token: ' . $e->getMessage());
+            return redirect('/welcome');
+        }
     }
+    
 
     /**
      * Destroy an authenticated session.
      */
     public function destroy(Request $request): RedirectResponse
     {
+        // Remover o token API se existir
+        if ($request->user()) {
+            $request->user()->tokens()->delete();
+        }
+        
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('login');
+    }
+    
+    /**
+     * Definir as habilidades com base na role do usuario
+     */
+    private function getAbilitiesForRole(string $role)
+    {
+        return match ($role) {
+            'admin' => ['*'],
+            'manager' => ['read', 'create', 'update'],
+            default => ['read'],
+        };
     }
 }

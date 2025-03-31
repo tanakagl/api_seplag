@@ -23,18 +23,18 @@ interface EditProps extends PageProps {
 
 export default function Edit({ servidor, errors }: EditProps & { errors: Record<string, string> }) {
     const { data, setData, put, processing } = useForm({
-        pes_nome: servidor.pessoa.pes_nome,
-        pes_data_nascimento: servidor.pessoa.pes_data_nascimento,
-        pes_sexo: servidor.pessoa.pes_sexo,
-        pes_mae: servidor.pessoa.pes_mae,
-        pes_pai: servidor.pessoa.pes_pai,
-        se_matricula: servidor.se_matricula,
-    });
+        pes_nome: servidor?.pessoa?.pes_nome || '',
+        pes_data_nascimento: servidor?.pessoa?.pes_data_nascimento || '',
+        pes_sexo: servidor?.pessoa?.pes_sexo || '',
+        pes_mae: servidor?.pessoa?.pes_mae || '',
+        pes_pai: servidor?.pessoa?.pes_pai || '',
+        se_matricula: servidor?.se_matricula || '',
+    })
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         put(route('servidores.efetivo.update', servidor.pes_id));
-    };
+    }
 
     return (
         <>

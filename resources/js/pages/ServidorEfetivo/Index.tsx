@@ -31,7 +31,7 @@ interface ServidorEfetivoIndexProps extends PageProps {
 
 export default function Index({ servidores, flash }: ServidorEfetivoIndexProps) {
     const handleDelete = (pesId: number) => {
-        if (confirm('Tem certeza que deseja excluir este servidor?')) {
+        if (confirm('Tem certeza que deseja excluir este servidor efetivo?')) {
             router.delete(route('servidores.efetivo.destroy', pesId));
         }
     };
@@ -81,19 +81,19 @@ export default function Index({ servidores, flash }: ServidorEfetivoIndexProps) 
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <Link
-                                            href={route('servidores.efetivo.show', servidor.pes_id)}
+                                            href={route('servidores.efetivo.show', servidor.pessoa.pes_id)}
                                             className="text-blue-500 hover:text-blue-700 mr-4"
                                         >
                                             Ver
                                         </Link>
                                         <Link
-                                            href={route('servidores.efetivo.edit', servidor.pes_id)}
+                                            href={route('servidores.efetivo.edit', servidor.pessoa.pes_id)}
                                             className="text-yellow-500 hover:text-yellow-700 mr-4"
                                         >
                                             Editar
                                         </Link>
                                         <button
-                                            onClick={() => handleDelete(servidor.pes_id)}
+                                            onClick={() => handleDelete(servidor.pessoa.pes_id)}
                                             className="text-red-500 hover:text-red-700"
                                         >
                                             Excluir
@@ -104,7 +104,6 @@ export default function Index({ servidores, flash }: ServidorEfetivoIndexProps) 
                         </tbody>
                     </table>
 
-                    {/* Paginação */}
                     <div className="px-6 py-4">
                         {servidores.links && (
                             <div className="flex justify-between">

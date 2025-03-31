@@ -33,6 +33,7 @@ class ServidorEfetivoController extends Controller
             'pes_sexo' => 'required|string|max:1',
             'pes_mae' => 'required|string|max:255',
             'pes_pai' => 'required|string|max:255',
+            'se_matricula' => 'required|string|max:20|unique:servidor_efetivo',
         ]);
 
         DB::transaction(function () use ($request) {
@@ -51,7 +52,7 @@ class ServidorEfetivoController extends Controller
         });
         
         return redirect()->route('servidores.efetivo.index')
-                         ->with('success', 'Servidor efetivo cadastrado com sucesso.');
+                        ->with('success', 'Servidor efetivo cadastrado com sucesso.');
     }
 
     public function show(ServidorEfetivo $servidorEfetivo)
@@ -67,6 +68,11 @@ class ServidorEfetivoController extends Controller
     {
         $servidorEfetivo->load('pessoa');
         
+        if (!$servidorEfetivo->pessoa) {
+            return redirect()->route('servidores.efetivo.index')
+                             ->with('error', 'Dados da pessoa não encontrados para este servidor.');
+        }
+        
         return Inertia::render('ServidorEfetivo/Edit', [
             'servidor' => $servidorEfetivo
         ]);
@@ -80,6 +86,10 @@ class ServidorEfetivoController extends Controller
             'pes_sexo' => 'required|string|max:1',
             'pes_mae' => 'required|string|max:255',
             'pes_pai' => 'required|string|max:255',
+            'se_matricula' => [
+                'required', 'string', 'max:20',
+                Rule::unique('servidor_efetivo', 'se_matricula')->ignore($servidorEfetivo->pes_id, 'pes_id')
+            ],
         ]);
 
         DB::transaction(function () use ($request, $servidorEfetivo) {
@@ -97,20 +107,44 @@ class ServidorEfetivoController extends Controller
         });
         
         return redirect()->route('servidores.efetivo.index')
-                         ->with('success', 'Servidor efetivo atualizado com sucesso.');
+                        ->with('success', 'Servidor efetivo atualizado com sucesso.');
     }
 
     public function destroy(ServidorEfetivo $servidorEfetivo)
     {
-        $pesId = $servidorEfetivo->pes_id;
-        
-        DB::transaction(function () use ($servidorEfetivo, $pesId) {
-            $servidorEfetivo->delete();
+        try {
+            DB::transaction(function () use ($servidorEfetivo) {
+                $pessoa = $servidorEfetivo->pessoa;
+                
+                $servidorEfetivo->delete();
+                
+                if ($pessoa) {
+                    $temOutrosVinculos = (
+                        \App\Models\ServidorTemporario::where('pes_id', $pessoa->pes_id)->exists() ||
+                        \App\Models\Lotacao::where('pes_id', $pessoa->pes_id)->exists()
+                    );
+                    
+                    if (!$temOutrosVinculos) {
+                        if (method_exists($pessoa, 'enderecos') && $pessoa->enderecos()->count() > 0) {
+                            $pessoa->enderecos()->delete();
+                        }
+                        
+                        if (method_exists($pessoa, 'fotos') && $pessoa->fotos()->count() > 0) {
+                            $pessoa->fotos()->delete();
+                        }
+                        
+                        $pessoa->delete();
+                    }
+                }
+            });
             
-            Pessoa::find($pesId)->delete();
-        });
-        
-        return redirect()->route('servidores.efetivo.index')
-                         ->with('success', 'Servidor efetivo excluído com sucesso.');
+            return redirect()->route('servidores.efetivo.index')
+                            ->with('success', 'Servidor efetivo excluído com sucesso.');
+        } catch (\Exception $e) {
+            \Log::error('Erro ao excluir servidor: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+            
+            return redirect()->route('servidores.efetivo.index')
+                            ->with('error', 'Não foi possível excluir o servidor. Erro: ' . $e->getMessage());
+        }
     }
 }

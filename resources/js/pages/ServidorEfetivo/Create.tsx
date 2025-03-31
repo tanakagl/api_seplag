@@ -1,52 +1,22 @@
-import { FormEvent } from 'react'
-import { Head, useForm } from '@inertiajs/react'
+import { Head } from '@inertiajs/react'
 import { PageProps } from '@inertiajs/core'
-import DatePicker, { registerLocale } from 'react-datepicker'
-import { ptBR } from 'date-fns/locale'
+import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css"
+import useFormulario from './hooks/useFormulario'
 
 export default function Create({ errors }: PageProps & { errors: Record<string, string> }) {
 
-  registerLocale('pt-BR', ptBR)
-
-  const { data, setData, post, processing } = useForm({
-    pes_nome: '',
-    pes_data_nascimento: '',
-    pes_sexo: '',
-    pes_mae: '',
-    pes_pai: '',
-    se_matricula: '',
-  });
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    post(route('servidores.efetivo.store'));
-  };
-
-  const handleDateChange = (date: Date | null) => {
-    if (date) {
-      const formattedDate = date.toISOString().split('T')[0];
-      setData('pes_data_nascimento', formattedDate);
-    } else {
-      setData('pes_data_nascimento', '');
-    }
-  };
-
-  const getDateValue = () => {
-    if (!data.pes_data_nascimento) return null;
-    const date = new Date(data.pes_data_nascimento);
-    return isNaN(date.getTime()) ? null : date;
-  };
+  const { data, setData, post, processing, handleDateChange, getDateValue } = useFormulario()
 
   return (
     <>
       <Head title="Criar Servidor Efetivo" />
-      
+
       <div className="container mx-auto py-8">
         <div className="max-w-2xl mx-auto">
           <h1 className="text-2xl font-semibold mb-6">Adicionar Servidor Efetivo</h1>
-          
-          <form onSubmit={handleSubmit}>
+
+          <form onSubmit={post}>
             <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
               <div className="mb-4">
                 <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" htmlFor="pes_nome">
@@ -62,7 +32,7 @@ export default function Create({ errors }: PageProps & { errors: Record<string, 
                 />
                 {errors.pes_nome && <p className="text-red-500 text-xs mt-1">{errors.pes_nome}</p>}
               </div>
-              
+
               <div className="mb-4">
                 <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" htmlFor="pes_data_nascimento">
                   Data de Nascimento
@@ -75,11 +45,12 @@ export default function Create({ errors }: PageProps & { errors: Record<string, 
                   locale="pt-BR"
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   placeholderText="DD/MM/AAAA"
+                  isClearable
                   required
                 />
                 {errors.pes_data_nascimento && <p className="text-red-500 text-xs mt-1">{errors.pes_data_nascimento}</p>}
               </div>
-              
+
               <div className="mb-4">
                 <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" htmlFor="pes_sexo">
                   Sexo
@@ -97,7 +68,7 @@ export default function Create({ errors }: PageProps & { errors: Record<string, 
                 </select>
                 {errors.pes_sexo && <p className="text-red-500 text-xs mt-1">{errors.pes_sexo}</p>}
               </div>
-              
+
               <div className="mb-4">
                 <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" htmlFor="pes_mae">
                   Nome da Mãe
@@ -112,7 +83,7 @@ export default function Create({ errors }: PageProps & { errors: Record<string, 
                 />
                 {errors.pes_mae && <p className="text-red-500 text-xs mt-1">{errors.pes_mae}</p>}
               </div>
-              
+
               <div className="mb-4">
                 <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" htmlFor="pes_pai">
                   Nome do Pai
@@ -127,7 +98,7 @@ export default function Create({ errors }: PageProps & { errors: Record<string, 
                 />
                 {errors.pes_pai && <p className="text-red-500 text-xs mt-1">{errors.pes_pai}</p>}
               </div>
-              
+
               <div className="mb-4">
                 <label className="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" htmlFor="se_matricula">
                   Matrícula
@@ -142,7 +113,7 @@ export default function Create({ errors }: PageProps & { errors: Record<string, 
                 />
                 {errors.se_matricula && <p className="text-red-500 text-xs mt-1">{errors.se_matricula}</p>}
               </div>
-              
+
               <div className="flex items-center justify-end mt-6">
                 <button
                   type="button"

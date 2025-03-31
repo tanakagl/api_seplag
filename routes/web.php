@@ -8,13 +8,13 @@ use App\Http\Controllers\UnidadeController;
 use App\Http\Controllers\LotacaoController;
 
 Route::get('/', function () {
-    return Inertia::render('welcome');
+    return Inertia::render('auth/login');
 })->name('home');
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+Route::middleware(['auth'])->group(function () {
+    Route::get('welcome', function () {
+        return Inertia::render('welcome');
+    })->name('welcome');
 });
 
 Route::resource('servidores/efetivo', ServidorEfetivoController::class, [
@@ -23,8 +23,13 @@ Route::resource('servidores/efetivo', ServidorEfetivoController::class, [
 Route::resource('servidores/temporario', ServidorTemporarioController::class, [
     'names' => 'servidores.temporario'
 ]);
-Route::resource('unidades', UnidadeController::class);
-Route::resource('lotacao', LotacaoController::class);
+Route::resource('unidades', UnidadeController::class)
+    ->middleware(['auth', 'verified'])
+    ->names('unidades');
+    
+Route::resource('lotacao', LotacaoController::class)
+    ->middleware(['auth', 'verified'])
+    ->names('lotacao');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

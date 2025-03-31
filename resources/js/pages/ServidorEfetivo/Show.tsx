@@ -79,7 +79,6 @@ export default function Show({ servidor }: ShowProps) {
                         </div>
                     </div>
 
-                    {/* Se houver endereços */}
                     {servidor.pessoa_enderecos && servidor.pessoa_enderecos.length > 0 && (
                         <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden mb-6">
                             <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
@@ -90,12 +89,10 @@ export default function Show({ servidor }: ShowProps) {
                                     <div key={index} className="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700 last:border-0">
                                         <p className="font-medium mb-2">Endereço {index + 1}</p>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                            {/* Aqui você adicionaria os campos específicos do endereço */}
                                             <div>
                                                 <p className="text-gray-500 dark:text-gray-400 text-sm">Logradouro:</p>
                                                 <p>{endereco.logradouro}</p>
                                             </div>
-                                            {/* Outros campos do endereço */}
                                         </div>
                                     </div>
                                 ))}
@@ -103,7 +100,6 @@ export default function Show({ servidor }: ShowProps) {
                         </div>
                     )}
 
-                    {/* Se houver lotações */}
                     {servidor.pessoa_lotacoes && servidor.pessoa_lotacoes.length > 0 && (
                         <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
                             <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
@@ -122,7 +118,6 @@ export default function Show({ servidor }: ShowProps) {
                                                 <p className="text-gray-500 dark:text-gray-400 text-sm">Data de Início:</p>
                                                 <p>{lotacao.data_inicio ? new Date(lotacao.data_inicio).toLocaleDateString() : 'Não informada'}</p>
                                             </div>
-                                            {/* Outros campos da lotação */}
                                         </div>
                                     </div>
                                 ))}
