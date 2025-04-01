@@ -27,7 +27,7 @@ export default function Welcome() {
                 <main className="w-full max-w-4xl">
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
                         <h2 className="text-2xl font-semibold mb-6 text-center">Módulos do Sistema</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             <button
                                 onClick={() => navigateTo(route('servidores.efetivo.index'))}
                                 className="bg-blue-600 hover:bg-blue-700 text-white py-4 px-6 rounded-lg shadow transition-colors duration-200 flex flex-col items-center justify-center"
@@ -59,7 +59,7 @@ export default function Welcome() {
                                 <span className="text-lg font-medium">Unidade</span>
                             </button>
                             <button
-                                onClick={() => navigateTo(route('lotacao.index'))} 
+                                onClick={() => navigateTo(route('lotacao.index'))}
                                 className="bg-amber-600 hover:bg-amber-700 text-white py-4 px-6 rounded-lg shadow transition-colors duration-200 flex flex-col items-center justify-center"
                                 disabled={isLoading}
                             >
@@ -67,6 +67,17 @@ export default function Welcome() {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                                 </svg>
                                 <span className="text-lg font-medium">Lotações</span>
+                            </button>
+                            <button
+                                onClick={() => navigateTo(route('endereco.index'))}
+                                className="bg-teal-600 hover:bg-teal-700 text-white py-4 px-6 rounded-lg shadow transition-colors duration-200 flex flex-col items-center justify-center"
+                                disabled={isLoading}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                <span className="text-lg font-medium">Endereços</span>
                             </button>
                         </div>
                     </div>
@@ -87,7 +98,7 @@ export default function Welcome() {
                     )}
                 </main>
                 <footer className="mt-12 text-center text-gray-500 dark:text-gray-400 text-sm">
-                    <p>© {new Date().getFullYear()} SEPLAG - Todos os direitos reservados</p>
+                    <p>© {new Date().getFullYear()} SEPLAG - By Matheo Rodrigues Bonucia</p>
                 </footer>
             </div>
         </>

@@ -57,7 +57,7 @@ class ServidorEfetivoController extends Controller
 
     public function show(ServidorEfetivo $servidorEfetivo)
     {
-        $servidorEfetivo->load('pessoa', 'pessoa.enderecos', 'pessoa.lotacoes.unidade');
+        $servidorEfetivo->load('pessoa', 'pessoa.enderecos.cidade', 'pessoa.lotacoes.unidade');
         
         return Inertia::render('ServidorEfetivo/Show', [
             'servidor' => $servidorEfetivo

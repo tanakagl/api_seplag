@@ -1,0 +1,87 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\Unidade;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
+class UnidadeApiController extends Controller
+{
+    public function index(Request $request)
+    {
+        $perPage = $request->input('per_page', 10);
+        $unidades = Unidade::paginate($perPage);
+        
+        return response()->json($unidades);
+    }
+
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'unid_nome' => 'required|string|max:255',
+            'unid_sigla' => 'required|string|max:50',
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        
+        $unidade = Unidade::create($request->all());
+        
+        return response()->json([
+            'message' => 'Unidade criada com sucesso.',
+            'unidade' => $unidade
+        ], 201);
+    }
+
+    public function show(Unidade $unidade)
+    {
+        return response()->json($unidade);
+    }
+
+    public function update(Request $request, Unidade $unidade)
+    {
+        $validator = Validator::make($request->all(), [
+            'unid_nome' => 'required|string|max:255',
+            'unid_sigla' => 'required|string|max:50',
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        
+        $unidade->update($request->all());
+        
+        return response()->json([
+            'message' => 'Unidade atualizada com sucesso.',
+            'unidade' => $unidade
+        ]);
+    }
+
+    public function destroy(Unidade $unidade)
+    {
+        try {
+            // Verificar se há lotações associadas a esta unidade
+            $temLotacoes = \App\Models\Lotacao::where('unid_id', $unidade->unid_id)->exists();
+            
+            if ($temLotacoes) {
+                return response()->json([
+                    'message' => 'Não é possível excluir esta unidade pois existem lotações associadas a ela.'
+                ], 409);
+            }
+            
+            $unidade->delete();
+            
+            return response()->json([
+                'message' => 'Unidade excluída com sucesso.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Não foi possível excluir a unidade.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+}

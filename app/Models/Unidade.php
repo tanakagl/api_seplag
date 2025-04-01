@@ -31,6 +31,11 @@ class Unidade extends Model
         return $this->belongsToMany(Endereco::class, 'unidade_endereco', 'unid_id', 'end_id')
                     ->withTimestamps();
     }
+
+    public function endereco()
+    {
+        return $this->enderecos()->first();
+    }
     
     /**
      * Relacionamento direto com a tabela unidade_endereco

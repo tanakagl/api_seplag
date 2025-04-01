@@ -34,12 +34,18 @@ class Pessoa extends Model
 
     public function enderecos()
     {
-        return $this->hasMany(Endereco::class, 'pes_id', 'pes_id');
+        return $this->belongsToMany(Endereco::class, 'pessoa_endereco', 'pes_id', 'end_id')
+        ->withTimestamps();
     }
 
-    public function fotos()
+    public function lotacoes()
     {
-        return $this->hasMany(FotoPessoa::class, 'pes_id', 'pes_id');
+        return $this->hasMany(Lotacao::class, 'pes_id', 'pes_id');
+    }
+
+    public function fotografias()
+    {
+        return $this->hasMany(Fotografia::class, 'pes_id', 'pes_id');
     }
 
     public function isServidorEfetivo()

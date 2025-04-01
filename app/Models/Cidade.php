@@ -18,4 +18,9 @@ class Cidade extends Model
     {
         return $this->hasMany(Endereco::class, 'cid_id', 'cid_id');
     }
+
+    public function estado()
+    {
+        return $this->belongsTo(Estado::class, 'cid_uf', 'id');
+    }
 }

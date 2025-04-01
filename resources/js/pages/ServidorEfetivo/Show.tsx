@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react'
+import { Head, Link, router } from '@inertiajs/react'
 import { PageProps } from '@inertiajs/core'
 
 interface Pessoa {
@@ -16,6 +16,17 @@ interface ServidorEfetivo {
     pessoa: Pessoa;
     pessoa_enderecos?: any[];
     pessoa_lotacoes?: any[];
+    enderecos: Array<{
+        end_id: number;
+        end_tipo_logradouro: string;
+        end_logradouro: string;
+        end_numero: number | null;
+        end_bairro: string;
+        cidade: {
+            cid_id: number;
+            nome: string;
+        };
+    }>;
 }
 
 interface ShowProps extends PageProps {
@@ -79,23 +90,69 @@ export default function Show({ servidor }: ShowProps) {
                         </div>
                     </div>
 
-                    {servidor.pessoa_enderecos && servidor.pessoa_enderecos.length > 0 && (
+                    {servidor.enderecos && servidor.enderecos.length > 0 ? (
                         <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden mb-6">
-                            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
                                 <h2 className="text-xl font-semibold">Endereços</h2>
+                                <Link
+                                    href={route('pessoa.endereco.create', servidor.pes_id)}
+                                    className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded text-sm"
+                                >
+                                    Adicionar Endereço
+                                </Link>
                             </div>
                             <div className="p-6">
-                                {servidor.pessoa_enderecos?.map((endereco, index) => (
-                                    <div key={index} className="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700 last:border-0">
-                                        <p className="font-medium mb-2">Endereço {index + 1}</p>
+                                {servidor.enderecos.map((endereco, index) => (
+                                    <div key={endereco.end_id} className="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700 last:border-0">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <p className="font-medium">Endereço {index + 1}</p>
+                                            <div className="flex space-x-2">
+                                                <Link
+                                                    href={route('endereco.edit', endereco.end_id)}
+                                                    className="text-yellow-500 hover:text-yellow-700"
+                                                >
+                                                    Editar
+                                                </Link>
+                                                <button
+                                                    onClick={() => {
+                                                        if (confirm('Tem certeza que deseja remover este endereço?')) {
+                                                            router.delete(route('pessoa.endereco.remove', [servidor.pes_id, endereco.end_id]));
+                                                        }
+                                                    }}
+                                                    className="text-red-500 hover:text-red-700"
+                                                >
+                                                    Remover
+                                                </button>
+                                            </div>
+                                        </div>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
-                                                <p className="text-gray-500 dark:text-gray-400 text-sm">Logradouro:</p>
-                                                <p>{endereco.logradouro}</p>
+                                                <p className="text-gray-500 dark:text-gray-400 text-sm">Endereço completo:</p>
+                                                <p>{endereco.end_tipo_logradouro} {endereco.end_logradouro}, {endereco.end_numero || 'S/N'}</p>
+                                                <p>{endereco.end_bairro}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-gray-500 dark:text-gray-400 text-sm">Cidade:</p>
+                                                <p>{endereco.cidade?.nome || 'Não informada'}</p>
                                             </div>
                                         </div>
                                     </div>
                                 ))}
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden mb-6">
+                            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                                <h2 className="text-xl font-semibold">Endereços</h2>
+                                <Link
+                                    href={route('pessoa.endereco.create', servidor.pes_id)}
+                                    className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded text-sm"
+                                >
+                                    Adicionar Endereço
+                                </Link>
+                            </div>
+                            <div className="p-6">
+                                <p className="text-gray-500 dark:text-gray-400">Nenhum endereço cadastrado.</p>
                             </div>
                         </div>
                     )}
