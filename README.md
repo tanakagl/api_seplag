@@ -39,9 +39,6 @@ O sistema possui interface de login própria do starterkit laravel, mas uma inte
 
 
 
-
-Context
-— none fetched
 API SEPLAG - Sistema de Gestão de Servidores Públicos
 📋 Visão Geral
 API SEPLAG é um sistema completo para gerenciamento de servidores públicos, incluindo servidores efetivos e temporários, suas lotações, endereços e fotografias. Desenvolvido com Laravel e integrado com MinIO para armazenamento de imagens.
@@ -54,9 +51,8 @@ API SEPLAG é um sistema completo para gerenciamento de servidores públicos, in
 ✅ Autenticação segura com tokens e controle de permissões
 ✅ API RESTful completa para integração com outros sistemas
 🛠️ Tecnologias
-Backend: PHP 8.2, Laravel 10
-Banco de Dados: PostgreSQL
-Cache: Redis
+Backend: PHP 8.2, Laravel 12
+Banco de Dados: PostgreSQL 16
 Armazenamento: MinIO (compatível com S3)
 Containerização: Docker e Docker Compose
 Frontend: Inertia.js, React, TypeScript
