@@ -10,12 +10,25 @@ services:
     restart: unless-stopped
     working_dir: /var/www/html
     environment:
-      DB_CONNECTION: pgsql
+      APP_ENV: ${APP_ENV}
+      APP_DEBUG: ${APP_DEBUG}
+      APP_URL: ${APP_URL}
+      DB_CONNECTION: ${DB_CONNECTION}
       DB_HOST: postgres
-      DB_PORT: 5432
+      DB_PORT: ${DB_PORT}
       DB_DATABASE: ${DB_DATABASE}
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
+      REDIS_HOST: redis
+      REDIS_PORT: ${REDIS_PORT}
+      FILESYSTEM_DISK: ${FILESYSTEM_DISK}
+      MINIO_ACCESS_KEY_ID: ${MINIO_ACCESS_KEY_ID}
+      MINIO_SECRET_ACCESS_KEY: ${MINIO_SECRET_ACCESS_KEY}
+      MINIO_DEFAULT_REGION: ${MINIO_DEFAULT_REGION}
+      MINIO_BUCKET: ${MINIO_BUCKET}
+      MINIO_URL: ${MINIO_URL}
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
+      MINIO_USE_PATH_STYLE_ENDPOINT: ${MINIO_USE_PATH_STYLE_ENDPOINT}
     volumes:
       - ./:/var/www/html
     ports:
@@ -28,7 +41,7 @@ services:
       - minio
     networks:
       - api_seplag_network
-      
+
   # Servidor de banco de dados PostgreSQL
   postgres:
     image: postgres:latest
@@ -53,10 +66,9 @@ services:
     ports:
       - "9000:9000"
       - "9001:9001"
-
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-matheorb}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-apiseplag}
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY_ID}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_ACCESS_KEY}
     volumes:
       - minio-data:/data
     networks:
