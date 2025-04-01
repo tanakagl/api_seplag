@@ -3,17 +3,19 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Cidade extends Model
 {
+    protected $table = 'cidade';
+    protected $primaryKey = 'cid_id';
+    
     protected $fillable = [
-        'estado_id',
-        'nome'
+        'cid_nome',
+        'cid_uf',
     ];
 
-    public function Estado(): BelongsTo
+    public function enderecos()
     {
-        return $this->belongsTo(Estado::class, 'estado_id');
+        return $this->hasMany(Endereco::class, 'cid_id', 'cid_id');
     }
 }

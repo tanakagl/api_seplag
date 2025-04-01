@@ -25,7 +25,7 @@ class Lotacao extends Model
     
     public function unidade()
     {
-        return $this->belongsTo(Unidade::class, 'unid_id', 'uni_id');
+        return $this->belongsTo(Unidade::class, 'unid_id', 'unid_id');
     }
     
     public function pessoa()

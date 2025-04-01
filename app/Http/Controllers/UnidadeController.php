@@ -2,88 +2,96 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Unidade;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class UnidadeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $unidades = Unidade::paginate(10);
-        return Inertia::render('Unidade/Index', ['unidades' => $unidades]);
+        $unidade = Unidade::paginate(10);
+        
+        return Inertia::render('Unidade/Index', [
+            'unidade' => $unidade
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return Inertia::render('Unidade/Create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            // Defina suas regras de validação aqui
+        $request->validate([
+            'unid_nome' => 'required|string|max:255',
+            'unid_sigla' => 'required|string|max:20',
         ]);
 
-        Unidade::create($validated);
-
-        return redirect()->route('unidades.index')
-            ->with('success', 'Unidade criada com sucesso.');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        $unidade = Unidade::findOrFail($id);
-        return Inertia::render('Unidade/Show', ['unidade' => $unidade]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        $unidade = Unidade::findOrFail($id);
-        return Inertia::render('Unidade/Edit', ['unidade' => $unidade]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        $unidade = Unidade::findOrFail($id);
+        Unidade::create([
+            'unid_nome' => $request->unid_nome,
+            'unid_sigla' => $request->unid_sigla,
+        ]);
         
-        $validated = $request->validate([
-            // Defina suas regras de validação aqui
-        ]);
-
-        $unidade->update($validated);
-
-        return redirect()->route('unidades.index')
-            ->with('success', 'Unidade atualizada com sucesso.');
+        return redirect()->route('unidade.index')
+                        ->with('success', 'Unidade cadastrada com sucesso.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function show(Unidade $unidade)
     {
-        $unidade = Unidade::findOrFail($id);
-        $unidade->delete();
+        $unidade->load('lotacao.pessoa');
+        
+        return Inertia::render('Unidade/Show', [
+            'unidade' => $unidade
+        ]);
+    }
 
-        return redirect()->route('unidades.index')
-            ->with('success', 'Unidade excluída com sucesso.');
+    public function edit(Unidade $unidade)
+    {
+        return Inertia::render('Unidade/Edit', [
+            'unidade' => $unidade
+        ]);
+    }
+
+    public function update(Request $request, Unidade $unidade)
+    {
+        $request->validate([
+            'unid_nome' => 'required|string|max:255',
+            'unid_sigla' => 'required|string|max:20',
+        ]);
+
+        $unidade->update([
+            'unid_nome' => $request->unid_nome,
+            'unid_sigla' => $request->unid_sigla,
+        ]);
+        
+        return redirect()->route('unidade.index')
+                        ->with('success', 'Unidade atualizada com sucesso.');
+    }
+
+    public function destroy(Unidade $unidade)
+    {
+        try {
+            DB::transaction(function () use ($unidade) {
+                if ($unidade->lotacoes()->count() > 0) {
+                    throw new \Exception('Não é possível excluir esta unidade pois existem lotações vinculadas a ela.');
+                }
+                                if (method_exists($unidade, 'enderecos') && $unidade->enderecos()->count() > 0) {
+                    $unidade->enderecos()->delete();
+                }
+                
+                $unidade->delete();
+            });
+            
+            return redirect()->route('unidade.index')
+                            ->with('success', 'Unidade excluída com sucesso.');
+        } catch (\Exception $e) {
+            \Log::error('Erro ao excluir unidade: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+            
+            return redirect()->route('unidade.index')
+                            ->with('error', 'Não foi possível excluir a unidade. Erro: ' . $e->getMessage());
+        }
     }
 }

@@ -6,8 +6,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
-use Illuminate\Http\Middleware\ForceJsonResponse;
 use Illuminate\Http\Middleware\HandleCors;
+use App\Http\Middleware\CheckTokenExpired;
 use Laravel\Sanctum\Http\Middleware\CheckAbilities;
 use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
 
@@ -26,11 +26,13 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Routing\Middleware\ThrottleRequests::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\ForceJsonResponse::class,
+            CheckTokenExpired::class,
         ]);
 
         $middleware->alias([
             'abilities' => CheckAbilities::class,
             'ability' => CheckForAnyAbility::class,
+            'check.token' => CheckTokenExpired::class,
         ]);
 
         $middleware->encryptCookies(except: ['appearance']);

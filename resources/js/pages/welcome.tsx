@@ -1,28 +1,17 @@
 import { type SharedData } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+import { Head, usePage, Link } from '@inertiajs/react';
+import { useState } from 'react';
 import { router } from '@inertiajs/react';
 
 export default function Welcome() {
     const { auth } = usePage<SharedData>().props;
     const [isLoading, setIsLoading] = useState(false);
-    
-    // Verificar se o usuário está autenticado
-    useEffect(() => {
-        if (!auth.user) {
-            window.location.href = route('login');
-        }
-    }, [auth]);
 
-    // Função para navegar para as diferentes páginas de CRUD
-    const navigateTo = (path: string) => {
+    // Função para navegar para as diferentes páginas de CRUD usando o router do Inertia
+    const navigateTo = (route: string) => {
         setIsLoading(true);
-        window.location.href = path;
+        router.visit(route);
     };
-
-    if (!auth.user) {
-        return null; // Não renderiza nada enquanto redireciona para o login
-    }
 
     return (
         <>
@@ -35,11 +24,9 @@ export default function Welcome() {
                     <h1 className="text-4xl font-bold mb-2">SEPLAG</h1>
                     <p className="text-lg text-gray-600 dark:text-gray-300">Sistema de Gestão de Pessoal</p>
                 </header>
-                
                 <main className="w-full max-w-4xl">
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
                         <h2 className="text-2xl font-semibold mb-6 text-center">Módulos do Sistema</h2>
-                        
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <button
                                 onClick={() => navigateTo(route('servidores.efetivo.index'))}
@@ -51,7 +38,6 @@ export default function Welcome() {
                                 </svg>
                                 <span className="text-lg font-medium">Servidores Efetivos</span>
                             </button>
-                            
                             <button
                                 onClick={() => navigateTo(route('servidores.temporario.index'))}
                                 className="bg-green-600 hover:bg-green-700 text-white py-4 px-6 rounded-lg shadow transition-colors duration-200 flex flex-col items-center justify-center"
@@ -62,20 +48,18 @@ export default function Welcome() {
                                 </svg>
                                 <span className="text-lg font-medium">Servidores Temporários</span>
                             </button>
-                            
                             <button
-                                onClick={() => navigateTo(route('unidades.index'))}
+                                onClick={() => navigateTo(route('unidade.index'))}
                                 className="bg-purple-600 hover:bg-purple-700 text-white py-4 px-6 rounded-lg shadow transition-colors duration-200 flex flex-col items-center justify-center"
                                 disabled={isLoading}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                                 </svg>
-                                <span className="text-lg font-medium">Unidades</span>
+                                <span className="text-lg font-medium">Unidade</span>
                             </button>
-                            
                             <button
-                                onClick={() => navigateTo(route('lotacoes.index'))}
+                                onClick={() => navigateTo(route('lotacao.index'))} 
                                 className="bg-amber-600 hover:bg-amber-700 text-white py-4 px-6 rounded-lg shadow transition-colors duration-200 flex flex-col items-center justify-center"
                                 disabled={isLoading}
                             >
@@ -86,29 +70,22 @@ export default function Welcome() {
                             </button>
                         </div>
                     </div>
-                    
                     {auth.user && (
                         <div className="mt-8 text-center">
                             <p className="text-gray-600 dark:text-gray-300">
                                 Logado como <span className="font-semibold">{auth.user.name}</span>
                             </p>
-                                <a 
-                                    href="#"
-                                    className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 mt-2 inline-block"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        router.post(route('logout'));
-                                    }}
-                                >
-                                    Sair do Sistema
-                                </a>
-                            <form id="logout-form" method="POST" action={route('logout')} style={{ display: 'none' }}>
-                                <input type="hidden" name="_token" value={document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''} />
-                            </form>
+                            <Link
+                                href={route('logout')}
+                                method="post"
+                                as="button"
+                                className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 mt-2 inline-block"
+                            >
+                                Sair do Sistema
+                            </Link>
                         </div>
                     )}
                 </main>
-                
                 <footer className="mt-12 text-center text-gray-500 dark:text-gray-400 text-sm">
                     <p>© {new Date().getFullYear()} SEPLAG - Todos os direitos reservados</p>
                 </footer>
