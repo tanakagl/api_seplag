@@ -71,19 +71,6 @@ cp .env.example .env
 3. Inicie os contêineres
 docker-compose up -d
 
-4. Configure a aplicação
-# Acesse o contêiner da aplicação
-docker exec -it api_seplag_app bash
-
-# Instale as dependências
-composer install
-
-# Gere a chave da aplicação
-php artisan key:generate
-
-# Execute as migrações e seeders
-php artisan migrate --seed
-
 # Crie o bucket no MinIO
 php artisan minio:create-bucket seplag
 
@@ -91,6 +78,21 @@ php artisan minio:create-bucket seplag
 API: http://localhost:8000/api
 Interface Web: http://localhost:8000
 MinIO Console: http://localhost:9001 (Login: matheorb / Senha: apiseplag)
+
+## 🚀 Inicialização Automatizada
+
+O projeto inclui um script de entrypoint que automatiza várias tarefas de configuração:
+
+- ✅ Verifica a conexão com o banco de dados
+- ✅ Gera a chave da aplicação
+- ✅ Executa migrações
+- ✅ Popula o banco de dados com dados iniciais
+- ✅ Limpa os caches
+- ✅ Inicia o servidor de desenvolvimento Vite
+- ✅ Inicia o servidor PHP
+
+Isso significa que após executar `docker-compose up -d`, a aplicação estará pronta para uso
+
 📚 Estrutura do Projeto
 api_seplag/
 ├── app/                  # Código da aplicação
