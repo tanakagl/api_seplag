@@ -10,3 +10,38 @@ Laravel 12
 PostgreSQL 16
 Vite - React
 PHP 8
+
+Foi criado um seeder para povoar a tabela de pessoas com alguns usuários:
+```
+public function run(): void
+    {
+        // Usuário Admin
+        User::create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'admin',
+        ]);
+
+        // Usuário Manager
+        User::create([
+            'name' => 'Manager User',
+            'email' => 'manager@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'manager',
+        ]);
+
+        // Usuário Normal
+        User::create([
+            'name' => 'Regular User',
+            'email' => 'user@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'user',
+        ]);
+´´´
+    }
+
+Basicamente o que muda é o email e senha: password
+
+
+O sistema possui interface de login própria do starterkit laravel, mas uma interface nova que agrupa em modo bloco os 4 CRUDS solicitados no edital.
