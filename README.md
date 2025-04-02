@@ -71,8 +71,11 @@ cp .env.example .env
 3. Inicie os contêineres
 docker-compose up -d
 
-# Crie o bucket no MinIO
+
+4. Configure o armazenamento
+```bash
 php artisan minio:create-bucket seplag
+```
 
 5. Acesse a aplicação
 API: http://localhost:8000/api
