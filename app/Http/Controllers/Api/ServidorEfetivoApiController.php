@@ -10,6 +10,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
+/**
+ * @OA\Tag(
+ *     name="Servidores Efetivos",
+ *     description="Endpoints para gerenciamento de servidores efetivos"
+ * )
+ */
 class ServidorEfetivoApiController extends Controller
 {
     /**

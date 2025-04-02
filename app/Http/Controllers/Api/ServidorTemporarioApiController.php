@@ -9,9 +9,38 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * @OA\Tag(
+ *     name="Servidores Temporários",
+ *     description="Endpoints para gerenciamento de servidores temporários"
+ * )
+ */
 class ServidorTemporarioApiController extends Controller
 {
-    public function index(Request $request)
+        /**
+     * @OA\Get(
+     *     path="/servidores/temporarios",
+     *     summary="Index servidortemporarioapi",
+     *     tags={"Servidores Temporários"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação bem-sucedida",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Recurso não encontrado"
+     *     )
+     * )
+     */
+public function index(Request $request)
     {
         $perPage = $request->input('per_page', 10);
         $servidores = ServidorTemporario::with('pessoa')->paginate($perPage);
@@ -19,7 +48,36 @@ class ServidorTemporarioApiController extends Controller
         return response()->json($servidores);
     }
 
-    public function store(Request $request)
+        /**
+     * @OA\Post(
+     *     path="/servidores/temporarios",
+     *     summary="Store servidortemporarioapi",
+     *     tags={"Servidores Temporários"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação bem-sucedida",
+     *         @OA\JsonContent(
+     *             type="object"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação"
+     *     )
+     * )
+     */
+public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'pes_nome' => 'required|string|max:255',
@@ -61,14 +119,82 @@ class ServidorTemporarioApiController extends Controller
         ], 201);
     }
 
-    public function show(ServidorTemporario $servidorTemporario)
+        /**
+     * @OA\Get(
+     *     path="/servidores/temporarios/{servidorTemporario}",
+     *     summary="Show servidortemporarioapi",
+     *     tags={"Servidores Temporários"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="servidorTemporario",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação bem-sucedida",
+     *         @OA\JsonContent(
+     *             type="object"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Recurso não encontrado"
+     *     )
+     * )
+     */
+public function show(ServidorTemporario $servidorTemporario)
     {
         $servidorTemporario->load('pessoa', 'pessoa.enderecos', 'pessoa.lotacoes.unidade');
         
         return response()->json($servidorTemporario);
     }
 
-    public function update(Request $request, ServidorTemporario $servidorTemporario)
+        /**
+     * @OA\Put(
+     *     path="/servidores/temporarios/{servidorTemporario}",
+     *     summary="Update servidortemporarioapi",
+     *     tags={"Servidores Temporários"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="servidorTemporario",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação bem-sucedida",
+     *         @OA\JsonContent(
+     *             type="object"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Recurso não encontrado"
+     *     )
+     * )
+     */
+public function update(Request $request, ServidorTemporario $servidorTemporario)
     {
         $validator = Validator::make($request->all(), [
             'pes_nome' => 'required|string|max:255',
@@ -107,7 +233,36 @@ class ServidorTemporarioApiController extends Controller
         ]);
     }
 
-    public function destroy(ServidorTemporario $servidorTemporario)
+        /**
+     * @OA\Delete(
+     *     path="/servidores/temporarios/{servidorTemporario}",
+     *     summary="Destroy servidortemporarioapi",
+     *     tags={"Servidores Temporários"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="servidorTemporario",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação bem-sucedida",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Recurso não encontrado"
+     *     )
+     * )
+     */
+public function destroy(ServidorTemporario $servidorTemporario)
     {
         try {
             DB::transaction(function () use ($servidorTemporario) {

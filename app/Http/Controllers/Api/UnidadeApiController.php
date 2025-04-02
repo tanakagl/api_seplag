@@ -7,9 +7,38 @@ use App\Models\Unidade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * @OA\Tag(
+ *     name="Unidades",
+ *     description="Endpoints para gerenciamento de unidades"
+ * )
+ */
 class UnidadeApiController extends Controller
 {
-    public function index(Request $request)
+        /**
+     * @OA\Get(
+     *     path="/unidades",
+     *     summary="Index unidadeapi",
+     *     tags={"Unidades"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação bem-sucedida",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Recurso não encontrado"
+     *     )
+     * )
+     */
+public function index(Request $request)
     {
         $perPage = $request->input('per_page', 10);
         $unidades = Unidade::paginate($perPage);
@@ -17,7 +46,36 @@ class UnidadeApiController extends Controller
         return response()->json($unidades);
     }
 
-    public function store(Request $request)
+        /**
+     * @OA\Post(
+     *     path="/unidades",
+     *     summary="Store unidadeapi",
+     *     tags={"Unidades"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação bem-sucedida",
+     *         @OA\JsonContent(
+     *             type="object"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação"
+     *     )
+     * )
+     */
+public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'unid_nome' => 'required|string|max:255',
@@ -36,12 +94,80 @@ class UnidadeApiController extends Controller
         ], 201);
     }
 
-    public function show(Unidade $unidade)
+        /**
+     * @OA\Get(
+     *     path="/unidades/{unidade}",
+     *     summary="Show unidadeapi",
+     *     tags={"Unidades"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="unidade",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação bem-sucedida",
+     *         @OA\JsonContent(
+     *             type="object"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Recurso não encontrado"
+     *     )
+     * )
+     */
+public function show(Unidade $unidade)
     {
         return response()->json($unidade);
     }
 
-    public function update(Request $request, Unidade $unidade)
+        /**
+     * @OA\Put(
+     *     path="/unidades/{unidade}",
+     *     summary="Update unidadeapi",
+     *     tags={"Unidades"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="unidade",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação bem-sucedida",
+     *         @OA\JsonContent(
+     *             type="object"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Recurso não encontrado"
+     *     )
+     * )
+     */
+public function update(Request $request, Unidade $unidade)
     {
         $validator = Validator::make($request->all(), [
             'unid_nome' => 'required|string|max:255',
@@ -60,7 +186,36 @@ class UnidadeApiController extends Controller
         ]);
     }
 
-    public function destroy(Unidade $unidade)
+        /**
+     * @OA\Delete(
+     *     path="/unidades/{unidade}",
+     *     summary="Destroy unidadeapi",
+     *     tags={"Unidades"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="unidade",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação bem-sucedida",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Recurso não encontrado"
+     *     )
+     * )
+     */
+public function destroy(Unidade $unidade)
     {
         try {
             // Verificar se há lotações associadas a esta unidade

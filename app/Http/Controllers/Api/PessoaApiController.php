@@ -7,9 +7,38 @@ use App\Models\Pessoa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * @OA\Tag(
+ *     name="Pessoas",
+ *     description="Endpoints para gerenciamento de pessoas"
+ * )
+ */
 class PessoaApiController extends Controller
 {
-    public function index(Request $request)
+        /**
+     * @OA\Get(
+     *     path="/pessoas",
+     *     summary="Index pessoaapi",
+     *     tags={"Pessoas"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação bem-sucedida",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Recurso não encontrado"
+     *     )
+     * )
+     */
+public function index(Request $request)
     {
         $perPage = $request->input('per_page', 10);
         $search = $request->input('search');
@@ -27,7 +56,36 @@ class PessoaApiController extends Controller
         return response()->json($pessoas);
     }
 
-    public function show(Pessoa $pessoa)
+        /**
+     * @OA\Get(
+     *     path="/pessoas/{pessoa}",
+     *     summary="Show pessoaapi",
+     *     tags={"Pessoas"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="pessoa",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação bem-sucedida",
+     *         @OA\JsonContent(
+     *             type="object"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Recurso não encontrado"
+     *     )
+     * )
+     */
+public function show(Pessoa $pessoa)
     {
         $pessoa->load('enderecos.cidade', 'lotacoes.unidade');
         
@@ -42,7 +100,46 @@ class PessoaApiController extends Controller
         ]);
     }
 
-    public function update(Request $request, Pessoa $pessoa)
+        /**
+     * @OA\Put(
+     *     path="/pessoas/{pessoa}",
+     *     summary="Update pessoaapi",
+     *     tags={"Pessoas"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="pessoa",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação bem-sucedida",
+     *         @OA\JsonContent(
+     *             type="object"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Recurso não encontrado"
+     *     )
+     * )
+     */
+public function update(Request $request, Pessoa $pessoa)
     {
         $validator = Validator::make($request->all(), [
             'pes_nome' => 'required|string|max:255',
@@ -64,7 +161,36 @@ class PessoaApiController extends Controller
         ]);
     }
 
-    public function destroy(Pessoa $pessoa)
+        /**
+     * @OA\Delete(
+     *     path="/pessoas/{pessoa}",
+     *     summary="Destroy pessoaapi",
+     *     tags={"Pessoas"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="pessoa",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação bem-sucedida",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Recurso não encontrado"
+     *     )
+     * )
+     */
+public function destroy(Pessoa $pessoa)
     {
         try {
             // Verificar se a pessoa tem vínculos

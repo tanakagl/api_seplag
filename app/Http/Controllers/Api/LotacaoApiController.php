@@ -10,9 +10,38 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * @OA\Tag(
+ *     name="Lotações",
+ *     description="Endpoints para gerenciamento de lotações"
+ * )
+ */
 class LotacaoApiController extends Controller
 {
-    public function index(Request $request)
+        /**
+     * @OA\Get(
+     *     path="/lotacoes",
+     *     summary="Index lotacaoapi",
+     *     tags={"Lotações"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação bem-sucedida",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Recurso não encontrado"
+     *     )
+     * )
+     */
+public function index(Request $request)
     {
         $perPage = $request->input('per_page', 10);
         $lotacoes = Lotacao::with(['pessoa', 'unidade'])->paginate($perPage);
@@ -20,7 +49,36 @@ class LotacaoApiController extends Controller
         return response()->json($lotacoes);
     }
 
-    public function store(Request $request)
+        /**
+     * @OA\Post(
+     *     path="/lotacoes",
+     *     summary="Store lotacaoapi",
+     *     tags={"Lotações"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação bem-sucedida",
+     *         @OA\JsonContent(
+     *             type="object"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação"
+     *     )
+     * )
+     */
+public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'pes_id' => 'required|exists:pessoa,pes_id',
@@ -42,14 +100,82 @@ class LotacaoApiController extends Controller
         ], 201);
     }
 
-    public function show(Lotacao $lotacao)
+        /**
+     * @OA\Get(
+     *     path="/lotacoes/{lotacao}",
+     *     summary="Show lotacaoapi",
+     *     tags={"Lotações"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="lotacao",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação bem-sucedida",
+     *         @OA\JsonContent(
+     *             type="object"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Recurso não encontrado"
+     *     )
+     * )
+     */
+public function show(Lotacao $lotacao)
     {
         $lotacao->load(['pessoa', 'unidade']);
         
         return response()->json($lotacao);
     }
 
-    public function update(Request $request, Lotacao $lotacao)
+        /**
+     * @OA\Put(
+     *     path="/lotacoes/{lotacao}",
+     *     summary="Update lotacaoapi",
+     *     tags={"Lotações"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="lotacao",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação bem-sucedida",
+     *         @OA\JsonContent(
+     *             type="object"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Recurso não encontrado"
+     *     )
+     * )
+     */
+public function update(Request $request, Lotacao $lotacao)
     {
         $validator = Validator::make($request->all(), [
             'pes_id' => 'required|exists:pessoa,pes_id',
@@ -71,7 +197,36 @@ class LotacaoApiController extends Controller
         ]);
     }
 
-    public function destroy(Lotacao $lotacao)
+        /**
+     * @OA\Delete(
+     *     path="/lotacoes/{lotacao}",
+     *     summary="Destroy lotacaoapi",
+     *     tags={"Lotações"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="lotacao",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação bem-sucedida",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Recurso não encontrado"
+     *     )
+     * )
+     */
+public function destroy(Lotacao $lotacao)
     {
         try {
             $lotacao->delete();
@@ -87,14 +242,60 @@ class LotacaoApiController extends Controller
         }
     }
     
-    public function lotacoesPorPessoa(Pessoa $pessoa)
+        /**
+     * @OA\Get(
+     *     path="/pessoas/{pessoa}/lotacoes",
+     *     summary="LotacoesPorPessoa lotacaoapi",
+     *     tags={"Lotações"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="pessoa",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação bem-sucedida"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Recurso não encontrado"
+     *     )
+     * )
+     */
+public function lotacoesPorPessoa(Pessoa $pessoa)
     {
         $lotacoes = $pessoa->lotacoes()->with('unidade')->get();
         
         return response()->json($lotacoes);
     }
     
-    public function unidades()
+        /**
+     * @OA\Get(
+     *     path="/unidades-lista",
+     *     summary="Unidades lotacaoapi",
+     *     tags={"Lotações"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Operação bem-sucedida"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Recurso não encontrado"
+     *     )
+     * )
+     */
+public function unidades()
     {
         $unidades = Unidade::orderBy('unid_nome')->get();
         

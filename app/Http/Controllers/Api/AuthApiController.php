@@ -8,6 +8,12 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * @OA\Tag(
+ *     name="Autenticação",
+ *     description="Endpoints para gerenciamento de autenticação"
+ * )
+ */
 class AuthApiController extends Controller
 {
     /**

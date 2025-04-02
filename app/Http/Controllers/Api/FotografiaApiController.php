@@ -9,6 +9,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+/**
+ * @OA\Tag(
+ *     name="Fotografias",
+ *     description="Endpoints para gerenciamento de fotografias"
+ * )
+ */
 class FotografiaApiController extends Controller
 {
     /**
