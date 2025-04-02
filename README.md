@@ -38,7 +38,7 @@ Basicamente o que muda é o email e senha: password
 ⚠️ ATENÇÃO: O sistema possui interface de login própria do starterkit laravel, mas uma interface nova que agrupa em modo bloco os 4 CRUDS solicitados no edital e também registro de endereços
 além da rota API ele possui esta rota WEB caso seja de interesse.
 
-
+SWAGGER (PARCIAL): /api/documentation/
 
 API SEPLAG - Sistema de Gestão de Servidores Públicos
 📋 Visão Geral
