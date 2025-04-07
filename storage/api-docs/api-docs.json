@@ -477,6 +477,416 @@
                 ]
             }
         },
+        "/api/servidores/efetivos": {
+            "get": {
+                "tags": [
+                    "Servidores Efetivos"
+                ],
+                "summary": "Listar todos os servidores efetivos",
+                "operationId": "89b2f66cb9f2d40cb4137c08f17256f8",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Número da página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de servidores efetivos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "current_page": {
+                                            "type": "integer"
+                                        },
+                                        "last_page": {
+                                            "type": "integer"
+                                        },
+                                        "per_page": {
+                                            "type": "integer"
+                                        },
+                                        "total": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Servidores Efetivos"
+                ],
+                "summary": "Criar um novo servidor efetivo",
+                "operationId": "5e7ff686cde9552e71d1096ce2db8e75",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "pes_nome",
+                                    "pes_data_nascimento",
+                                    "pes_sexo",
+                                    "pes_mae",
+                                    "pes_pai",
+                                    "se_matricula"
+                                ],
+                                "properties": {
+                                    "pes_nome": {
+                                        "type": "string"
+                                    },
+                                    "pes_data_nascimento": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "pes_sexo": {
+                                        "type": "string",
+                                        "enum": [
+                                            "M",
+                                            "F"
+                                        ]
+                                    },
+                                    "pes_mae": {
+                                        "type": "string"
+                                    },
+                                    "pes_pai": {
+                                        "type": "string"
+                                    },
+                                    "se_matricula": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Servidor criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/servidores/efetivos/{servidorEfetivo}": {
+            "get": {
+                "tags": [
+                    "Servidores Efetivos"
+                ],
+                "summary": "Obter detalhes de um servidor efetivo",
+                "operationId": "f678369b341e884e1bf65011b5e602db",
+                "parameters": [
+                    {
+                        "name": "servidorEfetivo",
+                        "in": "path",
+                        "description": "ID do servidor efetivo",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do servidor efetivo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Servidor não encontrado"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Servidores Efetivos"
+                ],
+                "summary": "Atualizar um servidor efetivo",
+                "operationId": "9c7b5c8ca7d840aff4281e84c5b79431",
+                "parameters": [
+                    {
+                        "name": "servidorEfetivo",
+                        "in": "path",
+                        "description": "ID do servidor efetivo",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "pes_nome",
+                                    "pes_data_nascimento",
+                                    "pes_sexo",
+                                    "pes_mae",
+                                    "pes_pai",
+                                    "se_matricula"
+                                ],
+                                "properties": {
+                                    "pes_nome": {
+                                        "type": "string"
+                                    },
+                                    "pes_data_nascimento": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "pes_sexo": {
+                                        "type": "string",
+                                        "enum": [
+                                            "M",
+                                            "F"
+                                        ]
+                                    },
+                                    "pes_mae": {
+                                        "type": "string"
+                                    },
+                                    "pes_pai": {
+                                        "type": "string"
+                                    },
+                                    "se_matricula": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Servidor atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Servidor não encontrado"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Servidores Efetivos"
+                ],
+                "summary": "Excluir um servidor efetivo",
+                "operationId": "74a8992cd4fea92992a90f1878499664",
+                "parameters": [
+                    {
+                        "name": "servidorEfetivo",
+                        "in": "path",
+                        "description": "ID do servidor efetivo",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Servidor excluído com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Servidor não encontrado"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/servidores-efetivos/unidade": {
+            "get": {
+                "tags": [
+                    "Servidores Efetivos"
+                ],
+                "summary": "Consultar servidores efetivos por unidade",
+                "operationId": "ef37c507b054c963262d2c915a50e054",
+                "parameters": [
+                    {
+                        "name": "unid_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de servidores efetivos da unidade",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "servidores": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "total": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/servidores-efetivos/endereco-funcional": {
+            "get": {
+                "tags": [
+                    "Servidores Efetivos"
+                ],
+                "summary": "Consultar endereço funcional por nome parcial do servidor",
+                "operationId": "5e48ade1c2c6fc5ca6dd8435babf4620",
+                "parameters": [
+                    {
+                        "name": "nome",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Endereços funcionais dos servidores",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "resultados": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "total": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/servidores/temporarios": {
             "get": {
                 "tags": [
@@ -935,6 +1345,10 @@
         {
             "name": "Pessoas",
             "description": "Gerenciamento de dados pessoais"
+        },
+        {
+            "name": "Servidores Efetivos",
+            "description": "Gerenciamento de servidores efetivos"
         },
         {
             "name": "Servidores Temporários",
